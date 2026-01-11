@@ -249,11 +249,25 @@ return
 
 let html=`<div class='shio-header'><span>Angka</span><span>Shio</span></div>`
 list.forEach(a=>{
+const shio = cariShio(Number(a))
+const img = shioImg[shio] || ""
+
 html+=`
 <div class="shio-row">
-<span class="shio-num">${a.padStart(2,"0")}</span>
-<span class="shio-shio">${cariShio(Number(a))}</span>
+  <span class="shio-num">${a.padStart(2,"0")}</span>
+
+  <span style="display:flex;align-items:center;gap:8px">
+    ${img ? `<img src="${img}" style="width:26px;height:26px">` : ""}
+    <span class="shio-shio">${shio}</span>
+  </span>
 </div>`
+  .shio-row img{
+border-radius:6px;
+background:#101115;
+padding:2px;
+}
+
+
 })
 
 box.className="output-box"
@@ -283,3 +297,4 @@ document.getElementById("hasilGenerate").innerText=r.join("")
 
 </body>
 </html>
+
