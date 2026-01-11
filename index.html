@@ -24,7 +24,7 @@ align-items:flex-start;
 
 .wrapper{
 width:100%;
-max-width:1100px;
+max-width:900px;
 display:flex;
 gap:32px;
 }
@@ -69,7 +69,7 @@ outline:none;
 background:#101115;
 border:1px solid rgba(255,255,255,.12);
 border-radius:12px;
-padding:14px;
+padding:16px;
 flex:1;
 overflow-y:auto;
 }
@@ -79,37 +79,22 @@ opacity:.6;
 font-size:13px;
 }
 
-/* GRID TABLE */
-.shio-table{
-display:grid;
-grid-template-columns:90px 1fr;
-gap:10px 14px;
+/* SHIO LIST */
+.shio-list{
+display:flex;
+flex-direction:column;
+gap:10px;
 }
 
-.shio-head{
-color:#93c5fd;
-font-weight:600;
-font-size:14px;
-padding:8px 12px;
-}
-
-/* CELL */
-.shio-cell{
+.shio-item{
 background:#17191f;
 border:1px solid rgba(255,255,255,.1);
-border-radius:10px;
-padding:12px;
-font-size:15px;
-display:flex;
-align-items:center;
-justify-content:center;
-}
-
-.shio-cell.shio{
-color:#a3e635;
+border-radius:12px;
+padding:14px 18px;
+font-size:16px;
 font-weight:700;
+color:#a3e635;
 text-transform:uppercase;
-justify-content:flex-start;
 }
 
 /* GENERATOR */
@@ -216,7 +201,7 @@ if(shioData[s].includes(n)) return s;
 return "-";
 }
 
-/* LIVE SHIO */
+/* LIVE SHIO (ONLY SHIO) */
 document.getElementById("inputAngka").addEventListener("input",()=>{
 const output=document.getElementById("hasil");
 const list=document.getElementById("inputAngka").value.trim().split(/\s+/);
@@ -227,17 +212,10 @@ output.innerText="Menunggu input...";
 return;
 }
 
-let html=`
-<div class="shio-table">
-<div class="shio-head">Angka</div>
-<div class="shio-head">Shio</div>
-`;
+let html=`<div class="shio-list">`;
 
 list.forEach(a=>{
-html+=`
-<div class="shio-cell">${a.padStart(2,"0")}</div>
-<div class="shio-cell shio">${cariShio(Number(a))}</div>
-`;
+html+=`<div class="shio-item">${cariShio(Number(a))}</div>`;
 });
 
 html+=`</div>`;
