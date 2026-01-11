@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -20,21 +21,23 @@ align-items:flex-start;
 
 .wrapper{
 width:100%;
-max-width:1100px;
+max-width:1200px;
 display:flex;
 gap:32px;
 }
 
+/* PANEL */
 .panel{
 flex:1;
 background:#17191f;
-border:1px solid rgba(255,255,255,.07);
+border:1px solid rgba(255,255,255,.08);
 border-radius:14px;
 padding:22px;
 display:flex;
 flex-direction:column;
 gap:18px;
 box-shadow:0 8px 24px rgba(0,0,0,.45);
+min-height:500px;
 }
 
 .title{
@@ -43,11 +46,12 @@ font-weight:600;
 color:white;
 }
 
+/* INPUTS */
 textarea,input{
 width:100%;
 padding:12px;
 border-radius:10px;
-border:1px solid rgba(255,255,255,.12);
+border:1px solid rgba(255,255,255,.15);
 background:#101115;
 color:white;
 font-size:14px;
@@ -58,11 +62,11 @@ border-color:#3b82f6;
 outline:none;
 }
 
-/* segmented option selector */
+/* SEGMENTED SELECTOR */
 .segment{
 display:inline-flex;
 background:#101115;
-border:1px solid rgba(255,255,255,.12);
+border:1px solid rgba(255,255,255,.15);
 border-radius:10px;
 overflow:hidden;
 }
@@ -83,7 +87,7 @@ color:white;
 background:#1b1e24;
 }
 
-/* main button */
+/* BUTTON */
 .action-btn{
 padding:12px;
 border:none;
@@ -97,7 +101,24 @@ transition:.2s;
 }
 .action-btn:hover{background:#2563eb}
 
-/* TABLE STYLE OUTPUT */
+/* OUTPUT SHIO SCROLLABLE */
+.output-box{
+background:#101115;
+border:1px solid rgba(255,255,255,.15);
+border-radius:10px;
+padding:12px;
+flex:1;
+min-height:200px;
+max-height:350px;
+overflow-y:auto;
+}
+
+.output-empty{
+opacity:.6;
+font-size:13px;
+}
+
+/* TABLE STYLE */
 .shio-table{
 width:100%;
 border-collapse:separate;
@@ -106,40 +127,44 @@ font-family:monospace;
 font-size:14px;
 }
 
-.shio-table th{
-text-align:left;
-padding-bottom:8px;
+.shio-header{
 color:#93c5fd;
 font-weight:600;
 font-size:14px;
+display:flex;
+justify-content:space-between;
+padding:4px 4px 8px 4px;
 }
 
 .shio-row{
-background:#101115;
+background:#17191f;
 padding:10px 14px;
 border-radius:6px;
-border:1px solid rgba(255,255,255,.1);
+border:1px solid rgba(255,255,255,.12);
 display:flex;
 justify-content:space-between;
 align-items:center;
 }
-
 .shio-num{
 color:#e5e7eb;
 font-weight:600;
-font-size:14px;
 }
-
 .shio-shio{
 color:#a3e635;
 font-weight:600;
-font-size:14px;
 text-transform:uppercase;
 }
 
-.result-empty{
-opacity:.6;
-font-size:13px;
+/* GENERATOR OUTPUT BOX */
+.gen-output{
+margin-top:6px;
+padding:12px;
+background:#101115;
+border:1px solid rgba(255,255,255,.15);
+border-radius:10px;
+font-weight:600;
+font-size:20px;
+text-align:center;
 }
 </style>
 </head>
@@ -151,25 +176,27 @@ font-size:13px;
 <!-- SHIO PANEL -->
 <div class="panel">
 <div class="title">Cek Shio (Live)</div>
-<textarea id="inputAngka" placeholder="Masukkan angka + Enter (1 baris = 1 angka)"></textarea>
-<div id="hasil" class="result-empty">Menunggu input...</div>
+<textarea id="inputAngka" placeholder="Masukkan angka (1 baris = 1 angka)..."></textarea>
+
+<div id="hasil" class="output-box output-empty">
+Menunggu input...
+</div>
 </div>
 
 <!-- GENERATOR PANEL -->
 <div class="panel">
 <div class="title">Generator Nomor</div>
-
 <input type="number" id="jumlahDigit" value="6" min="1" max="12">
 
 <div class="segment" id="modeSelector">
 <button data-mode="notwin" class="active">Tidak Twin</button>
-button data-mode="twin">Twin</button>
+<button data-mode="twin">Twin</button>
 <button data-mode="bebas">Bebas</button>
 </div>
 
 <button class="action-btn" onclick="generate()">Generate</button>
 
-<div id="hasilGenerate" class="shio-row" style="justify-content:center;color:#9ca3af;">
+<div id="hasilGenerate" class="gen-output">
 Belum generate
 </div>
 </div>
@@ -184,38 +211,27 @@ ULAR:[1,13,25,37,49,61,73,85,97],NAGA:[2,14,26,38,50,62,74,86,98],KELINCI:[3,15,
 function cariShio(n){for(let s in shioData){if(shioData[s].includes(n))return s}return "Tidak ditemukan"}
 
 document.getElementById("inputAngka").addEventListener("input",()=>{
+const box=document.getElementById("hasil")
 const list=document.getElementById("inputAngka").value.trim().split(/\s+/)
-const output=document.getElementById("hasil")
 
 if(list==""||list.length==0){
-output.className="result-empty"
-output.innerText="Menunggu input..."
+box.className="output-box output-empty"
+box.innerText="Menunggu input..."
 return
 }
 
-let html=`
-<table class="shio-table">
-<tr><th>Angka</th><th>Shio</th></tr>
-`
-
+let html=`<div class='shio-header'><span>Angka</span><span>Shio</span></div>`
 list.forEach(a=>{
 if(!a) return
-const shio=cariShio(Number(a))
 html+=`
-<tr>
-<td colspan="2">
 <div class="shio-row">
 <span class="shio-num">${a.padStart(2,"0")}</span>
-<span class="shio-shio">${shio}</span>
-</div>
-</td>
-</tr>`
+<span class="shio-shio">${cariShio(Number(a))}</span>
+</div>`
 })
 
-html+=`</table>`
-
-output.className=""
-output.innerHTML=html
+box.className="output-box"
+box.innerHTML=html
 })
 
 let mode="notwin"
