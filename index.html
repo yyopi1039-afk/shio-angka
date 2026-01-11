@@ -2,8 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tools</title>
+<title>Tools Shio</title>
 
 <style>
 *{
@@ -80,40 +79,37 @@ opacity:.6;
 font-size:13px;
 }
 
-/* HEADER */
-.shio-header{
+/* GRID TABLE */
+.shio-table{
 display:grid;
-grid-template-columns:80px 1fr;
-padding:8px 14px;
+grid-template-columns:90px 1fr;
+gap:10px 14px;
+}
+
+.shio-head{
 color:#93c5fd;
 font-weight:600;
 font-size:14px;
+padding:8px 12px;
 }
 
-/* ROW */
-.shio-row{
-display:grid;
-grid-template-columns:80px 1fr;
-align-items:center;
+/* CELL */
+.shio-cell{
 background:#17191f;
-padding:12px 14px;
-border-radius:10px;
 border:1px solid rgba(255,255,255,.1);
-margin-bottom:8px;
-}
-
-.col-angka{
-font-weight:600;
+border-radius:10px;
+padding:12px;
 font-size:15px;
-text-align:center;
-color:#e5e7eb;
+display:flex;
+align-items:center;
+justify-content:center;
 }
 
-.col-shio{
-font-weight:700;
-font-size:14px;
+.shio-cell.shio{
 color:#a3e635;
+font-weight:700;
 text-transform:uppercase;
+justify-content:flex-start;
 }
 
 /* GENERATOR */
@@ -149,9 +145,13 @@ cursor:pointer;
 }
 
 .result-generate{
-justify-content:center;
-font-size:20px;
+background:#17191f;
+border:1px solid rgba(255,255,255,.12);
+border-radius:10px;
+padding:14px;
+font-size:22px;
 letter-spacing:3px;
+text-align:center;
 }
 </style>
 </head>
@@ -164,7 +164,7 @@ letter-spacing:3px;
 <div class="panel">
 <div class="title">Cek Shio (Live)</div>
 
-<textarea id="inputAngka" rows="6" placeholder="Masukkan angka (1 baris = 1 angka)"></textarea>
+<textarea id="inputAngka" rows="8" placeholder="Masukkan angka (1 baris = 1 angka)"></textarea>
 
 <div id="hasil" class="output-box result-empty">
 Menunggu input...
@@ -185,7 +185,7 @@ Menunggu input...
 
 <button class="action-btn" onclick="generate()">Generate</button>
 
-<div id="hasilGenerate" class="shio-row result-generate">
+<div id="hasilGenerate" class="result-generate">
 Belum generate
 </div>
 </div>
@@ -227,19 +227,20 @@ output.innerText="Menunggu input...";
 return;
 }
 
-let html=`<div class="shio-header">
-<div>Angka</div>
-<div>Shio</div>
-</div>`;
+let html=`
+<div class="shio-table">
+<div class="shio-head">Angka</div>
+<div class="shio-head">Shio</div>
+`;
 
 list.forEach(a=>{
 html+=`
-<div class="shio-row">
-<div class="col-angka">${a.padStart(2,"0")}</div>
-<div class="col-shio">${cariShio(Number(a))}</div>
-</div>`;
+<div class="shio-cell">${a.padStart(2,"0")}</div>
+<div class="shio-cell shio">${cariShio(Number(a))}</div>
+`;
 });
 
+html+=`</div>`;
 output.className="output-box";
 output.innerHTML=html;
 });
