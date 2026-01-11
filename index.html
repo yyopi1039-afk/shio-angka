@@ -3,16 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tools</title>
+<title>Tools Prediksi</title>
 
 <style>
-*{
-box-sizing:border-box;
-margin:0;
-padding:0;
-font-family:-apple-system,system-ui,Segoe UI,Roboto
-}
-
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,system-ui,Segoe UI,Roboto}
 body{
 background:#0e0f13;
 color:#e5e7eb;
@@ -22,19 +16,16 @@ display:flex;
 justify-content:center;
 align-items:flex-start;
 }
-
 .wrapper{
 width:100%;
-max-width:1100px;
+max-width:1200px;
 display:flex;
 gap:32px;
 }
-
-/* PANEL */
 .panel{
 flex:1;
 background:#17191f;
-border:1px solid rgba(255,255,255,.07);
+border:1px solid rgba(255,255,255,.08);
 border-radius:14px;
 padding:22px;
 display:flex;
@@ -42,14 +33,11 @@ flex-direction:column;
 gap:18px;
 box-shadow:0 8px 24px rgba(0,0,0,.45);
 }
-
 .title{
 font-size:15px;
 font-weight:600;
 color:white;
 }
-
-/* INPUT */
 textarea,input{
 width:100%;
 padding:12px;
@@ -64,8 +52,6 @@ textarea:focus,input:focus{
 border-color:#3b82f6;
 outline:none;
 }
-
-/* SEGMENT */
 .segment{
 display:inline-flex;
 background:#101115;
@@ -80,17 +66,11 @@ border:none;
 color:#9ca3af;
 cursor:pointer;
 font-size:14px;
-transition:.2s;
 }
 .segment button.active{
 background:#3b82f6;
 color:white;
 }
-.segment button:not(.active):hover{
-background:#1b1e24;
-}
-
-/* BUTTON */
 .action-btn{
 padding:12px;
 border:none;
@@ -100,13 +80,8 @@ color:white;
 font-weight:600;
 font-size:15px;
 cursor:pointer;
-transition:.2s;
 }
-.action-btn:hover{
-background:#2563eb;
-}
-
-/* OUTPUT SHIO */
+.action-btn:hover{background:#2563eb}
 .output-box{
 background:#101115;
 border:1px solid rgba(255,255,255,.12);
@@ -115,22 +90,14 @@ padding:14px;
 flex:1;
 overflow-y:auto;
 }
-
-.result-empty{
-opacity:.6;
-font-size:13px;
-}
-
-/* SHIO ROW */
+.result-empty{opacity:.6;font-size:13px}
 .shio-header{
 display:flex;
 justify-content:space-between;
 color:#93c5fd;
 font-weight:600;
-font-size:14px;
-margin-bottom:10px;
+margin-bottom:8px;
 }
-
 .shio-row{
 background:#17191f;
 padding:10px 14px;
@@ -139,27 +106,25 @@ border:1px solid rgba(255,255,255,.1);
 display:flex;
 justify-content:space-between;
 align-items:center;
-margin-bottom:8px;
+margin-bottom:6px;
 }
-
-.shio-num{
-font-weight:600;
-font-size:14px;
-}
-
-.shio-shio{
-color:#a3e635;
-font-weight:600;
-font-size:14px;
-text-transform:uppercase;
-}
-
-/* GENERATOR RESULT */
+.shio-shio{color:#a3e635;font-weight:600}
 .result-generate{
 justify-content:center;
 font-size:20px;
 letter-spacing:3px;
-color:#e5e7eb;
+}
+.prediksi-line{
+display:flex;
+justify-content:space-between;
+padding:6px 0;
+border-bottom:1px dashed rgba(255,255,255,.15);
+font-family:monospace;
+}
+.prediksi-strong{
+color:#facc15;
+font-weight:700;
+text-align:center;
 }
 </style>
 </head>
@@ -168,22 +133,17 @@ color:#e5e7eb;
 
 <div class="wrapper">
 
-<!-- SHIO PANEL -->
+<!-- SHIO -->
 <div class="panel">
 <div class="title">Cek Shio (Live)</div>
-
-<textarea id="inputAngka" rows="6" placeholder="Masukkan angka (1 baris = 1 angka)"></textarea>
-
-<div id="hasil" class="output-box result-empty">
-Menunggu input...
-</div>
+<textarea id="inputAngka" rows="6" placeholder="1 baris = 1 angka"></textarea>
+<div id="hasil" class="output-box result-empty">Menunggu input...</div>
 </div>
 
-<!-- GENERATOR PANEL -->
+<!-- GENERATOR -->
 <div class="panel">
-<div class="title">Generator Nomor</div>
-
-<input type="number" id="jumlahDigit" value="6" min="1" max="12">
+<div class="title">Generator BBFS</div>
+<input type="number" id="jumlahDigit" value="6" min="1" max="10">
 
 <div class="segment" id="modeSelector">
 <button data-mode="notwin" class="active">Tidak Twin</button>
@@ -193,15 +153,20 @@ Menunggu input...
 
 <button class="action-btn" onclick="generate()">Generate</button>
 
-<div id="hasilGenerate" class="shio-row result-generate">
-Belum generate
+<div id="hasilGenerate" class="shio-row result-generate">Belum generate</div>
 </div>
+
+<!-- PREDIKSI -->
+<div class="panel">
+<div class="title">Prediksi Otomatis</div>
+<input type="date" id="tanggal">
+<div id="prediksiBox" class="output-box">Klik Generate</div>
+<button class="action-btn" onclick="copyPrediksi()">Copy Semua</button>
 </div>
 
 </div>
 
 <script>
-/* DATA SHIO */
 const shioData={
 ULAR:[1,13,25,37,49,61,73,85,97],
 NAGA:[2,14,26,38,50,62,74,86,98],
@@ -221,57 +186,68 @@ function cariShio(n){
 for(let s in shioData){
 if(shioData[s].includes(n)) return s;
 }
-return "Tidak ditemukan";
+return "-";
 }
 
-/* LIVE SHIO CHECK */
 document.getElementById("inputAngka").addEventListener("input",()=>{
-const output=document.getElementById("hasil");
-const list=document.getElementById("inputAngka").value.trim().split(/\s+/);
-
-if(!list[0]){
-output.className="output-box result-empty";
-output.innerText="Menunggu input...";
-return;
-}
-
-let html=`<div class="shio-header"><span>Angka</span><span>Shio</span></div>`;
-
-list.forEach(a=>{
-const shio=cariShio(Number(a));
-html+=`
-<div class="shio-row">
-<span class="shio-num">${a.padStart(2,"0")}</span>
-<span class="shio-shio">${shio}</span>
-</div>`;
+const v=inputAngka.value.trim().split(/\s+/);
+if(!v[0]){hasil.innerHTML="Menunggu input...";return;}
+let h=`<div class="shio-header"><span>Angka</span><span>Shio</span></div>`;
+v.forEach(a=>{
+h+=`<div class="shio-row"><span>${a}</span><span class="shio-shio">${cariShio(Number(a))}</span></div>`;
+});
+hasil.innerHTML=h;
 });
 
-output.className="output-box";
-output.innerHTML=html;
-});
-
-/* MODE SELECT */
 let mode="notwin";
-document.querySelectorAll("#modeSelector button").forEach(btn=>{
-btn.onclick=()=>{
-document.querySelectorAll("#modeSelector button").forEach(b=>b.classList.remove("active"));
-btn.classList.add("active");
-mode=btn.dataset.mode;
+document.querySelectorAll("#modeSelector button").forEach(b=>{
+b.onclick=()=>{
+document.querySelectorAll("#modeSelector button").forEach(x=>x.classList.remove("active"));
+b.classList.add("active");
+mode=b.dataset.mode;
 };
 });
 
-/* GENERATOR */
-function generate(){
-const d=parseInt(document.getElementById("jumlahDigit").value);
+function ambil(arr,n){
 let r=[];
+while(r.length<n){
+let a=arr[Math.floor(Math.random()*arr.length)];
+if(!r.includes(a)) r.push(a);
+}
+return r.join("");
+}
 
+function generate(){
+const d=parseInt(jumlahDigit.value);
+let r=[];
 while(r.length<d){
 let a=Math.floor(Math.random()*10);
 if(mode==="notwin" && r.includes(a)) continue;
 r.push(a);
 }
+hasilGenerate.innerText=r.join("");
+buatPrediksi(r.join(""));
+}
 
-document.getElementById("hasilGenerate").innerText=r.join("");
+function buatPrediksi(bbfs){
+const d=bbfs.split("");
+prediksiBox.innerHTML=`
+<div>🗓 ${tanggal.value || new Date().toLocaleDateString("id-ID")}</div>
+<div class="prediksi-line"><b>BBFS</b><span>${bbfs}</span></div>
+<div class="prediksi-line"><b>TARUNG</b><span>${ambil(d,5)}</span></div>
+<div class="prediksi-line"><b>SHOOT</b><span>${ambil(d,4)}</span></div>
+<div class="prediksi-line"><b>BOOM 2D</b><span>${ambil(d,2)} - ${ambil(d,2)}</span></div>
+<div class="prediksi-line"><b>CB</b><span>${ambil(d,1)}</span></div>
+<div class="prediksi-line"><b>CM</b><span>${ambil(d,2)}</span></div>
+<div class="prediksi-line"><b>CN</b><span>${ambil(d,3)}</span></div>
+<div class="prediksi-strong">💥 ${ambil(d,4)} 💥</div>
+<div class="prediksi-strong">💥 ${ambil(d,4)} 💥</div>
+`;
+}
+
+function copyPrediksi(){
+navigator.clipboard.writeText(prediksiBox.innerText);
+alert("Prediksi berhasil dicopy");
 }
 </script>
 
