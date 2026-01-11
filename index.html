@@ -3,192 +3,169 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shio Angka</title>
+<title>YUDIKA.PTRG - Cek Shio & Generator</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background: linear-gradient(135deg, #300000, #700000, #b00000);
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+*{box-sizing:border-box}
+body{
+margin:0;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#3b0a0a,#0f0a0a);
+font-family:system-ui;
+color:#fff;
+padding:16px
 }
-
-.container {
-  width: 100%;
-  max-width: 420px;
-  padding: 18px;
+.container{width:100%;max-width:420px}
+.card{
+background:#140808;
+border-radius:20px;
+padding:22px;
+box-shadow:0 18px 45px rgba(0,0,0,.8)
 }
-
-.card {
-  background: #0b0b0b;
-  border-radius: 20px;
-  padding: 22px;
-  box-shadow: 0 18px 45px rgba(0,0,0,0.8);
+h1{
+text-align:center;
+color:#ef4444;
+margin:0 0 5px;
+font-size:28px
 }
-
-h1 {
-  text-align: center;
-  color: #ff2e2e;
-  margin-bottom: 18px;
-  font-size: 26px;
-  letter-spacing: 2px;
+.desc{
+text-align:center;
+font-size:14px;
+color:#fca5a5;
+margin-bottom:15px
 }
-
-input {
-  width: 100%;
-  padding: 15px;
-  font-size: 16px;
-  border-radius: 14px;
-  border: none;
-  outline: none;
-  margin-bottom: 12px;
+textarea,input{
+width:100%;
+padding:12px;
+border-radius:12px;
+border:none;
+background:#1c0d0d;
+color:#fff;
+outline:1px solid #7f1d1d;
+font-size:15px
 }
-
-button {
-  width: 100%;
-  padding: 16px;
-  font-size: 16px;
-  font-weight: bold;
-  border-radius: 14px;
-  border: none;
-  cursor: pointer;
-  margin-top: 10px;
+button{
+width:100%;
+margin-top:15px;
+padding:13px;
+border-radius:14px;
+border:none;
+background:linear-gradient(135deg,#ef4444,#b91c1c);
+color:#fff;
+font-weight:bold;
+font-size:16px;
+cursor:pointer
 }
-
-.btn-proses {
-  background: linear-gradient(135deg, #ff2e2e, #b00000);
-  color: #fff;
+.hasil{
+margin-top:15px;
+background:#1c0d0d;
+border-radius:14px;
+padding:12px;
+font-family:monospace;
+white-space:pre-line;
+outline:1px solid #7f1d1d;
+min-height:60px;
+opacity:0;
+transform:translateY(10px);
+transition:.4s
 }
-
-.btn-excel {
-  background: linear-gradient(135deg, #ff6b6b, #ff2e2e);
-  color: #fff;
+.hasil.show{
+opacity:1;
+transform:translateY(0)
 }
-
-button:active {
-  transform: scale(0.97);
-}
-
-.hasil {
-  margin-top: 16px;
-  background: #000;
-  border-radius: 14px;
-  padding: 14px;
-  min-height: 70px;
-}
-
-/* ITEM HASIL */
-.hasil-item {
-  color: #ff4d4d;
-  font-size: 14px;
-  opacity: 0;
-  transform: translateY(10px);
-  animation: muncul 0.4s ease forwards;
-}
-
-/* ANIMASI */
-@keyframes muncul {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.footer {
-  margin-top: 18px;
-  text-align: center;
-  font-size: 12px;
-  color: #ffb3b3;
-  opacity: 0.85;
+hr{border:1px solid #7f1d1d;margin:25px 0}
+label{font-size:14px;color:#fecaca}
+footer{
+text-align:center;
+margin-top:12px;
+font-size:12px;
+color:#fca5a5
 }
 </style>
 </head>
 
 <body>
-
 <div class="container">
-  <div class="card">
-    <h1>JUARATOGEL</h1>
+<div class="card">
 
-    <input type="text" id="angka" placeholder="Masukkan angka (pisahkan spasi / enter)">
+<h1>YUDIKA.PTRG</h1>
+<div class="desc">Cek Shio & Generator Nomor</div>
 
-    <button class="btn-proses" onclick="prosesShio()">PROSES</button>
-    <button class="btn-excel" onclick="exportExcel()">EXPORT EXCEL</button>
+<textarea id="inputAngka" placeholder="Tempel angka (1 baris = 1 angka)"></textarea>
+<button onclick="prosesShio()">PROSES SHIO</button>
+<div class="hasil" id="hasil">Hasil muncul di sini...</div>
 
-    <div id="hasil" class="hasil"></div>
+<hr>
 
-    <div class="footer">
-      Cari di Google: <strong>JUARATOGEL</strong>
-    </div>
-  </div>
+<h3 style="text-align:center;color:#ef4444">Generator Nomor Acak</h3>
+
+<label>Jumlah Digit</label>
+<input id="jumlahDigit" type="number" value="6" min="1" max="10">
+
+<div style="margin-top:10px">
+<label><input type="radio" name="mode" value="notwin" checked> Tidak Twin</label><br>
+<label><input type="radio" name="mode" value="twin"> Twin Boleh</label><br>
+<label><input type="radio" name="mode" value="bebas"> Bebas</label>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<button onclick="generateAngka()">GENERATE</button>
+<div class="hasil" id="hasilGenerate">Hasil generator...</div>
+
+<footer>cari di google YUDIKA.PTRG</footer>
+
+</div>
+</div>
+
 <script>
-const shio = [
-  "TIKUS","KERBAU","MACAN","KELINCI",
-  "NAGA","ULAR","KUDA","KAMBING",
-  "MONYET","AYAM","ANJING","BABI"
-];
+const shioData={
+ULAR:[1,13,25,37,49,61,73,85,97],
+NAGA:[2,14,26,38,50,62,74,86,98],
+KELINCI:[3,15,27,39,51,63,75,87,99],
+HARIMAU:[4,16,28,40,52,64,76,88,0],
+KERBAU:[5,17,29,41,53,65,77,89],
+TIKUS:[6,18,30,42,54,66,78,90],
+BABI:[7,19,31,43,55,67,79,91],
+ANJING:[8,20,32,44,56,68,80,92],
+AYAM:[9,21,33,45,57,69,81,93],
+MONYET:[10,22,34,46,58,70,82,94],
+KAMBING:[11,23,35,47,59,71,83,95],
+KUDA:[12,24,36,48,60,72,84,96]
+};
 
-function prosesShio() {
-  const input = document.getElementById("angka").value;
-  const hasilDiv = document.getElementById("hasil");
-  hasilDiv.innerHTML = "";
-
-  if (!input) {
-    hasilDiv.innerHTML = '<div class="hasil-item">Masukkan angka terlebih dahulu</div>';
-    return;
-  }
-
-  const angkaArray = input.split(/[\s,]+/);
-
-  angkaArray.forEach((a, i) => {
-    const n = parseInt(a);
-    if (!isNaN(n)) {
-      const hasil = shio[n % 12];
-      const div = document.createElement("div");
-      div.className = "hasil-item";
-      div.style.animationDelay = (i * 0.08) + "s";
-      div.textContent = `${n} → ${hasil}`;
-      hasilDiv.appendChild(div);
-    }
-  });
+function cariShio(n){
+for(let s in shioData){if(shioData[s].includes(n))return s}
+return "Tidak ditemukan"
 }
 
-function exportExcel() {
-  const items = document.querySelectorAll(".hasil-item");
-  if (!items.length) {
-    alert("Belum ada hasil");
-    return;
-  }
+function prosesShio(){
+const list=document.getElementById("inputAngka").value.split(/\s+/)
+let out=""
+list.forEach(a=>{
+if(a){
+out+=a.padStart(2,"0")+" → "+cariShio(Number(a))+"\n"
+}})
+const h=document.getElementById("hasil")
+h.innerText=out||"Tidak ada data"
+h.classList.add("show")
+}
 
-  const rows = Array.from(items).map(item => {
-    const p = item.textContent.split("→").map(x => x.trim());
-    return { Angka: p[0], Shio: p[1] };
-  });
-
-  const ws = XLSX.utils.json_to_sheet(rows);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Hasil");
-  XLSX.writeFile(wb, "hasil-shio.xlsx");
+function generateAngka(){
+const d=parseInt(document.getElementById("jumlahDigit").value)
+const mode=document.querySelector('input[name="mode"]:checked').value
+let r=[]
+while(r.length<d){
+let a=Math.floor(Math.random()*10)
+if(mode==="notwin" && r.includes(a))continue
+r.push(a)
+}
+const h=document.getElementById("hasilGenerate")
+h.innerText=r.join("")
+h.classList.add("show")
 }
 </script>
 
 </body>
 </html>
-<script>
-(function () {
-  const password = "juara123"; // GANTI PASSWORD DI SINI
-
-  let input = prompt("Masukkan sandi akses:");
-  if (input !== password) {
-    alert("Sandi salah!");
-    document.body.innerHTML = "";
-  }
-})();
-</script>
-
