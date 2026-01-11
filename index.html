@@ -1,173 +1,184 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ULA KAM SANGSI - Cek Shio & Generator</title>
+<title>Tools</title>
 
 <style>
-*{box-sizing:border-box}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,system-ui,Segoe UI,Roboto}
+
 body{
-margin:0;
+background:#0e0f13;
+color:#e5e7eb;
 min-height:100vh;
+padding:32px;
 display:flex;
 justify-content:center;
-align-items:center;
-background:linear-gradient(135deg,#3b0a0a,#0f0a0a);
-font-family:system-ui;
-color:#fff;
-padding:16px
+align-items:flex-start;
 }
-.container{width:100%;max-width:420px}
-.card{
-background:#140808;
-border-radius:20px;
+
+.wrapper{
+width:100%;
+max-width:1100px;
+display:flex;
+gap:32px;
+}
+
+.panel{
+flex:1;
+background:#17191f;
+border:1px solid rgba(255,255,255,.07);
+border-radius:14px;
 padding:22px;
-box-shadow:0 18px 45px rgba(0,0,0,.8)
+display:flex;
+flex-direction:column;
+gap:18px;
+box-shadow:0 8px 24px rgba(0,0,0,.45);
 }
-h1{
-text-align:center;
-color:#ef4444;
-margin:0 0 5px;
-font-size:28px
+
+.title{
+font-size:15px;
+font-weight:600;
+color:white;
 }
-.desc{
-text-align:center;
-font-size:14px;
-color:#fca5a5;
-margin-bottom:15px
-}
+
+/* input */
 textarea,input{
 width:100%;
 padding:12px;
-border-radius:12px;
-border:none;
-background:#1c0d0d;
-color:#fff;
-outline:1px solid #7f1d1d;
-font-size:15px
+border-radius:10px;
+border:1px solid rgba(255,255,255,.12);
+background:#101115;
+color:white;
+font-size:14px;
+resize:none;
 }
-button{
-width:100%;
-margin-top:15px;
-padding:13px;
-border-radius:14px;
-border:none;
-background:linear-gradient(135deg,#ef4444,#b91c1c);
-color:#fff;
-font-weight:bold;
-font-size:16px;
-cursor:pointer
+textarea:focus,input:focus{
+border-color:#3b82f6;
+outline:none;
 }
-.hasil{
-margin-top:15px;
-background:#1c0d0d;
-border-radius:14px;
+
+/* segmented button */
+.segment{
+display:inline-flex;
+background:#101115;
+border:1px solid rgba(255,255,255,.12);
+border-radius:10px;
+overflow:hidden;
+}
+.segment button{
+padding:10px 16px;
+background:none;
+border:none;
+color:#9ca3af;
+cursor:pointer;
+font-size:14px;
+transition:.2s;
+}
+.segment button.active{
+background:#3b82f6;
+color:white;
+}
+.segment button:not(.active):hover{
+background:#1b1e24;
+}
+
+/* result box */
+.result{
 padding:12px;
-font-family:monospace;
+background:#101115;
+border:1px solid rgba(255,255,255,.12);
+border-radius:10px;
+min-height:50px;
 white-space:pre-line;
-outline:1px solid #7f1d1d;
-min-height:60px;
-opacity:0;
-transform:translateY(10px);
-transition:.4s
+font-family:monospace;
+font-size:14px;
+color:#9ae6b4;
 }
-.hasil.show{
-opacity:1;
-transform:translateY(0)
+
+/* main generate button */
+.action-btn{
+padding:12px;
+border:none;
+border-radius:10px;
+background:#3b82f6;
+color:white;
+font-weight:600;
+font-size:15px;
+cursor:pointer;
+transition:.2s;
 }
-hr{border:1px solid #7f1d1d;margin:25px 0}
-label{font-size:14px;color:#fecaca}
-footer{
-text-align:center;
-margin-top:12px;
-font-size:12px;
-color:#fca5a5
-}
+.action-btn:hover{background:#2563eb}
 </style>
 </head>
 
 <body>
-<div class="container">
-<div class="card">
 
-<h1>ULA KAM SANGSI</h1>
-<div class="desc">Cek Shio & Generator Nomor</div>
+<div class="wrapper">
 
-<textarea id="inputAngka" placeholder="Tempel angka (1 baris = 1 angka)"></textarea>
-<button onclick="prosesShio()">PROSES SHIO</button>
-<div class="hasil" id="hasil">Hasil muncul di sini...</div>
-
-<hr>
-
-<h3 style="text-align:center;color:#ef4444">Generator Nomor Acak</h3>
-
-<label>Jumlah Digit</label>
-<input id="jumlahDigit" type="number" value="6" min="1" max="10">
-
-<div style="margin-top:10px">
-<label><input type="radio" name="mode" value="notwin" checked> Tidak Twin</label><br>
-<label><input type="radio" name="mode" value="twin"> Twin Boleh</label><br>
-<label><input type="radio" name="mode" value="bebas"> Bebas</label>
+<!-- SHIO PANEL -->
+<div class="panel">
+<div class="title">Cek Shio (Live)</div>
+<textarea id="inputAngka" placeholder="Masukkan angka + Enter"></textarea>
+<div id="hasil" class="result">Menunggu input...</div>
 </div>
 
-<button onclick="generateAngka()">GENERATE</button>
-<div class="hasil" id="hasilGenerate">Hasil generator...</div>
+<!-- GENERATOR PANEL -->
+<div class="panel">
+<div class="title">Generator Nomor</div>
 
-<footer>© Product by Bang Tigan</footer>
+<input type="number" id="jumlahDigit" value="6" min="1" max="12">
 
+<div class="segment" id="modeSelector">
+<button data-mode="notwin" class="active">Tidak Twin</button>
+<button data-mode="twin">Twin</button>
+<button data-mode="bebas">Bebas</button>
 </div>
+
+<button class="action-btn" onclick="generate()">Generate</button>
+
+<div id="hasilGenerate" class="result">Belum generate</div>
+</div>
+
 </div>
 
 <script>
 const shioData={
-ULAR:[1,13,25,37,49,61,73,85,97],
-NAGA:[2,14,26,38,50,62,74,86,98],
-KELINCI:[3,15,27,39,51,63,75,87,99],
-HARIMAU:[4,16,28,40,52,64,76,88,0],
-KERBAU:[5,17,29,41,53,65,77,89],
-TIKUS:[6,18,30,42,54,66,78,90],
-BABI:[7,19,31,43,55,67,79,91],
-ANJING:[8,20,32,44,56,68,80,92],
-AYAM:[9,21,33,45,57,69,81,93],
-MONYET:[10,22,34,46,58,70,82,94],
-KAMBING:[11,23,35,47,59,71,83,95],
-KUDA:[12,24,36,48,60,72,84,96]
+ULAR:[1,13,25,37,49,61,73,85,97],NAGA:[2,14,26,38,50,62,74,86,98],KELINCI:[3,15,27,39,51,63,75,87,99],HARIMAU:[4,16,28,40,52,64,76,88,0],KERBAU:[5,17,29,41,53,65,77,89],TIKUS:[6,18,30,42,54,66,78,90],BABI:[7,19,31,43,55,67,79,91],ANJING:[8,20,32,44,56,68,80,92],AYAM:[9,21,33,45,57,69,81,93],MONYET:[10,22,34,46,58,70,82,94],KAMBING:[11,23,35,47,59,71,83,95],KUDA:[12,24,36,48,60,72,84,96]
 };
 
-function cariShio(n){
-for(let s in shioData){if(shioData[s].includes(n))return s}
-return "Tidak ditemukan"
-}
+function cariShio(n){for(let s in shioData){if(shioData[s].includes(n))return s}return "Tidak ditemukan"}
 
-function prosesShio(){
-const list=document.getElementById("inputAngka").value.split(/\s+/)
+document.getElementById("inputAngka").addEventListener("input",()=>{
+const list=document.getElementById("inputAngka").value.trim().split(/\s+/)
 let out=""
-list.forEach(a=>{
-if(a){
-out+=a.padStart(2,"0")+" → "+cariShio(Number(a))+"\n"
-}})
-const h=document.getElementById("hasil")
-h.innerText=out||"Tidak ada data"
-h.classList.add("show")
-}
+list.forEach(a=>{if(a){out+=a.padStart(2,"0")+" → "+cariShio(Number(a))+"\n"}})
+document.getElementById("hasil").innerText=out||"Menunggu input..."
+})
 
-function generateAngka(){
+let mode="notwin"
+
+document.querySelectorAll("#modeSelector button").forEach(btn=>{
+btn.onclick=()=>{
+document.querySelectorAll("#modeSelector button").forEach(b=>b.classList.remove("active"))
+btn.classList.add("active")
+mode=btn.dataset.mode
+}
+})
+
+function generate(){
 const d=parseInt(document.getElementById("jumlahDigit").value)
-const mode=document.querySelector('input[name="mode"]:checked').value
 let r=[]
 while(r.length<d){
 let a=Math.floor(Math.random()*10)
 if(mode==="notwin" && r.includes(a))continue
 r.push(a)
 }
-const h=document.getElementById("hasilGenerate")
-h.innerText=r.join("")
-h.classList.add("show")
+document.getElementById("hasilGenerate").innerText=r.join("")
 }
 </script>
 
 </body>
 </html>
-
-
