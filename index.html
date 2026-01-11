@@ -65,7 +65,58 @@ border-color:#3b82f6;
 outline:none;
 }
 
-/* SEGMENT */
+/* OUTPUT */
+.output-box{
+background:#101115;
+border:1px solid rgba(255,255,255,.12);
+border-radius:12px;
+padding:14px;
+flex:1;
+overflow-y:auto;
+}
+
+.result-empty{
+opacity:.6;
+font-size:13px;
+}
+
+/* HEADER */
+.shio-header{
+display:grid;
+grid-template-columns:80px 1fr;
+padding:8px 14px;
+color:#93c5fd;
+font-weight:600;
+font-size:14px;
+}
+
+/* ROW */
+.shio-row{
+display:grid;
+grid-template-columns:80px 1fr;
+align-items:center;
+background:#17191f;
+padding:12px 14px;
+border-radius:10px;
+border:1px solid rgba(255,255,255,.1);
+margin-bottom:8px;
+}
+
+.col-angka{
+font-weight:600;
+font-size:15px;
+text-align:center;
+color:#e5e7eb;
+}
+
+.col-shio{
+font-weight:700;
+font-size:14px;
+color:#a3e635;
+text-transform:uppercase;
+}
+
+/* GENERATOR */
 .segment{
 display:inline-flex;
 background:#101115;
@@ -80,17 +131,12 @@ border:none;
 color:#9ca3af;
 cursor:pointer;
 font-size:14px;
-transition:.2s;
 }
 .segment button.active{
 background:#3b82f6;
 color:white;
 }
-.segment button:not(.active):hover{
-background:#1b1e24;
-}
 
-/* BUTTON */
 .action-btn{
 padding:12px;
 border:none;
@@ -100,66 +146,12 @@ color:white;
 font-weight:600;
 font-size:15px;
 cursor:pointer;
-transition:.2s;
-}
-.action-btn:hover{
-background:#2563eb;
 }
 
-/* OUTPUT SHIO */
-.output-box{
-background:#101115;
-border:1px solid rgba(255,255,255,.12);
-border-radius:10px;
-padding:14px;
-flex:1;
-overflow-y:auto;
-}
-
-.result-empty{
-opacity:.6;
-font-size:13px;
-}
-
-/* SHIO ROW */
-.shio-header{
-display:flex;
-justify-content:space-between;
-color:#93c5fd;
-font-weight:600;
-font-size:14px;
-margin-bottom:10px;
-}
-
-.shio-row{
-background:#17191f;
-padding:10px 14px;
-border-radius:8px;
-border:1px solid rgba(255,255,255,.1);
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:8px;
-}
-
-.shio-num{
-font-weight:600;
-font-size:14px;
-}
-
-.shio-shio{
-color:#a3e635;
-font-weight:600;
-font-size:14px;
-text-transform:uppercase;
-}
-
-/* GENERATOR RESULT */
 .result-generate{
 justify-content:center;
 font-size:20px;
 letter-spacing:3px;
-color:#e5e7eb;
 }
 </style>
 </head>
@@ -221,10 +213,10 @@ function cariShio(n){
 for(let s in shioData){
 if(shioData[s].includes(n)) return s;
 }
-return "Tidak ditemukan";
+return "-";
 }
 
-/* LIVE SHIO CHECK */
+/* LIVE SHIO */
 document.getElementById("inputAngka").addEventListener("input",()=>{
 const output=document.getElementById("hasil");
 const list=document.getElementById("inputAngka").value.trim().split(/\s+/);
@@ -235,14 +227,16 @@ output.innerText="Menunggu input...";
 return;
 }
 
-let html=`<div class="shio-header"><span>Angka</span><span>Shio</span></div>`;
+let html=`<div class="shio-header">
+<div>Angka</div>
+<div>Shio</div>
+</div>`;
 
 list.forEach(a=>{
-const shio=cariShio(Number(a));
 html+=`
 <div class="shio-row">
-<span class="shio-num">${a.padStart(2,"0")}</span>
-<span class="shio-shio">${shio}</span>
+<div class="col-angka">${a.padStart(2,"0")}</div>
+<div class="col-shio">${cariShio(Number(a))}</div>
 </div>`;
 });
 
@@ -250,7 +244,7 @@ output.className="output-box";
 output.innerHTML=html;
 });
 
-/* MODE SELECT */
+/* MODE */
 let mode="notwin";
 document.querySelectorAll("#modeSelector button").forEach(btn=>{
 btn.onclick=()=>{
@@ -264,13 +258,11 @@ mode=btn.dataset.mode;
 function generate(){
 const d=parseInt(document.getElementById("jumlahDigit").value);
 let r=[];
-
 while(r.length<d){
 let a=Math.floor(Math.random()*10);
 if(mode==="notwin" && r.includes(a)) continue;
 r.push(a);
 }
-
 document.getElementById("hasilGenerate").innerText=r.join("");
 }
 </script>
