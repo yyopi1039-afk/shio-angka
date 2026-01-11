@@ -180,3 +180,15 @@ function exportExcel() {
 
 </body>
 </html>
+<script>
+(function () {
+  const password = "juara123"; // GANTI PASSWORD DI SINI
+
+  let input = prompt("Masukkan sandi akses:");
+  if (input !== password) {
+    alert("Sandi salah!");
+    document.body.innerHTML = "";
+  }
+})();
+</script>
+
